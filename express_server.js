@@ -1,8 +1,9 @@
 const express = require('express');
+const { render } = require('ejs');
 const app = express();
 const PORT = 8080 // default port
 
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -15,7 +16,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/urls', (req, res) => {
-  res.json(urlDatabase)
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 })
 
 app.get('/hello', (req, res) => {
