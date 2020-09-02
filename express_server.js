@@ -28,6 +28,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 }
 
+const users = {}
 // routing to home page
 app.get('/', (req, res) => {
   res.send('Hello!')
@@ -109,6 +110,19 @@ app.get('/register', (req, res) => {
   res.render('registration_page')
 })
 
+app.post('/register', (req, res) => {
+  const randomID = generateRandomString()
+  users[randomID] = {
+    id: randomID,
+    email: req.body.email,
+    password: req.body.password
+  }
+
+  res.cookie('user_id', users[randomID].id)
+
+  console.log(users)
+  res.redirect('/urls')
+})
 // route to allow login to the user
 app.post('/login', (req, res) => {
   // storing the provided username in tthe cookies
