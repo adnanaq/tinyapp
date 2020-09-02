@@ -7,19 +7,19 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-  <title>Registeration</title>
+  <title>Login form</title>
 </head>
 
 <body>
   <%- include('partials/_header') %>
 
-  <h1>Create Account</h1>
-  <form action="/register" method="POST">
+  <h1>Login</h1>
+  <form action="/login" method="POST">
     <label for="email">Email address</label>
     <input type="email" name="email">
     <label for="password">Password</label>
     <input type="password" name="password">
-    <button type="submit">Register</button>
+    <button type="submit">Login</button>
   </form>
 </body>
 
