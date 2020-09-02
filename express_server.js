@@ -16,11 +16,17 @@ function generateRandomString() {
   return Math.random().toString(36).substring(2, 8)
 }
 
+function checkEmail(email, obj) {
+  for (key in obj) {
+    return obj[key].email.toLowerCase() === email.toLowerCase()
+  }
+}
+
 // function to validate if the object has the value for username from cookie.
 //True if it has, otherwise false.
-function authenticate(str, obj) {
-  return obj["username"] === undefined ? obj['authenticate'] = false : obj['authenticate'] = true
-}
+// function authenticate(str, obj) {
+//   return obj["username"] === undefined ? obj['authenticate'] = false : obj['authenticate'] = true
+// }
 
 
 const urlDatabase = {
@@ -38,19 +44,18 @@ app.get('/', (req, res) => {
 app.get('/urls', (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies['username']
+    user: users[req.cookies['user_id']]
   };
 
-  authenticate("username", templateVars)
   res.render("urls_index", templateVars);
 })
 
 // route to new URL search query
 app.get('/urls/new', (req, res) => {
   const templateVars = {
-    username: req.cookies['username']
+    user: users[req.cookies['user_id']]
   }
-  authenticate("username", templateVars)
+
   res.render('urls_new', templateVars);
 });
 
@@ -63,9 +68,9 @@ app.get('/urls/:shortURL', (req, res) => {
   const templateVars = {
     shortURL,
     longURL,
-    username: req.cookies['username']
+    user: users[req.cookies['user_id']]
   }
-  authenticate("username", templateVars)
+
   res.render('urls_show', templateVars)
 })
 
@@ -111,6 +116,15 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+
+  if (!req.body.email || !req.body.password) {
+    return res.status(400).send('Missing email or password');
+  }
+
+  if (checkEmail(req.body.email, users)) {
+    return res.status(400).send('Email already exist!')
+  }
+
   const randomID = generateRandomString()
   users[randomID] = {
     id: randomID,
@@ -119,8 +133,6 @@ app.post('/register', (req, res) => {
   }
 
   res.cookie('user_id', users[randomID].id)
-
-  console.log(users)
   res.redirect('/urls')
 })
 // route to allow login to the user
@@ -132,7 +144,7 @@ app.post('/login', (req, res) => {
 
 app.get('/logout', (req, res) => {
   // clearing the cookie by logging-out
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls')
 })
 
