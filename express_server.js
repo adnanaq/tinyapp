@@ -105,6 +105,10 @@ app.post('/urls/:shortURL', (req, res) => {
   res.redirect('/urls')
 })
 
+app.get('/register', (req, res) => {
+  res.render('registration_page')
+})
+
 // route to allow login to the user
 app.post('/login', (req, res) => {
   // storing the provided username in tthe cookies
