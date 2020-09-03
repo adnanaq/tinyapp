@@ -12,4 +12,17 @@ const checkEmail = (email, obj) => {
   }
 };
 
-module.exports = { generateRandomString, checkEmail }
+const urlsForUser = (id, db) => {
+
+  let filteredDB = {}
+
+  for (let key in db) {
+    if (id === db[key]['userID']) {
+      filteredDB[key] = db[key]
+    }
+  }
+  return filteredDB;
+}
+
+
+module.exports = { generateRandomString, checkEmail, urlsForUser }

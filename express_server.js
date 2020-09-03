@@ -5,14 +5,13 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
-const { generateRandomString, checkEmail } = require('./helpers/helpers');
+const { generateRandomString, checkEmail, urlsForUser } = require('./helpers/helpers');
 
 // setting up middlewares to be used in the project
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(cookieParser());
-const saltRounds = 10;
 
 
 
@@ -50,7 +49,7 @@ app.post('/register', (req, res) => {
   users[randomID] = {
     id: randomID,
     email: req.body.email,
-    password: req.body.password
+    password: bcrypt.hashSync(req.body.password, 10)
   };
 
   res.redirect('/urls');
@@ -80,7 +79,7 @@ app.post('/login', (req, res) => {
   }
 
   if (emailkey) {
-    if (password === users[emailkey].password) {
+    if (bcrypt.compareSync(password, users[emailkey].password)) {
       res.cookie('user_id', emailkey);
       return res.redirect('/urls');
     } else {
@@ -103,13 +102,20 @@ app.get('/', (req, res) => {
 
 // route to the list of short and long URL list
 app.get('/urls', (req, res) => {
+  console.log(req.params, req.body)
+
+  const urlDatabaseFiltered = urlsForUser(req.cookies['user_id'], urlDatabase)
+
   const templateVars = {
-    urls: urlDatabase,
+    urls: urlDatabaseFiltered,
     user: users[req.cookies['user_id']]
   };
-  // console.log(users[req.cookies['user_id']])
 
-  res.render("urls_index", templateVars);
+  if (templateVars['user']) {
+    res.render('urls_index', templateVars);
+  } else {
+    res.redirect('/login')
+  }
 });
 
 
@@ -141,7 +147,7 @@ app.get('/urls/:shortURL', (req, res) => {
 });
 
 // POST route to post/update the new url in the database
-app.post('/urls/', (req, res) => {
+app.post('/urls', (req, res) => {
 
   const shortURL = generateRandomString();
   let longURL = req.body.longURL;
@@ -165,7 +171,9 @@ app.get('/u/:shortURL', (req, res) => {
 // route to delete URL using the key
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
-  delete urlDatabase[shortURL];
+  if (urlDatabase[shortURL]['userID'] === req.cookies['user_id']) {
+    delete urlDatabase[shortURL];
+  }
   res.redirect('/urls');
 });
 
@@ -174,7 +182,9 @@ app.post('/urls/:shortURL', (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = req.params.shortURL;
 
-  urlDatabase[shortURL] = longURL;
+  if (urlDatabase[shortURL]['userID'] === req.cookies['user_id']) {
+    urlDatabase[shortURL]['longURL'] = longURL;
+  }
   res.redirect('/urls');
 });
 
