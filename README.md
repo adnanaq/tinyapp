@@ -14,9 +14,11 @@ The project allows users to not only shorten the links but also edit and delete 
 
 ## Final Product
 
-!["The main login view of the web application."](./screenshots/login_view.png)
-!["The url list view"](./screenshots/url_list_view.png)
-!["The edit view of the links"](./screenshots/edit_view.png)
+!["The main login view of the web application."](https://github.com/dreamb0yDani/tinyapp/blob/master/docs/login_view.png?raw=true)
+
+!["The url list view"](https://github.com/dreamb0yDani/tinyapp/blob/master/docs/url_list_view.png?raw=true)
+
+!["The edit view of the links"](https://github.com/dreamb0yDani/tinyapp/blob/master/docs/edit_view.png?raw=true)
 
 ## Dependencies
 
