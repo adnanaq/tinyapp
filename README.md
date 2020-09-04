@@ -40,5 +40,3 @@ npm install
 ```
 node express_server.js
 ```
- Mocha and Chai were uninstalled at the end of the project along with the test code.
-
