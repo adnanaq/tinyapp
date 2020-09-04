@@ -4,16 +4,17 @@ const generateRandomString = () => {
 };
 
 // function to check matching email and return key
-const checkEmail = (email, obj) => {
-  for (let key in obj) {
-    if (obj[key].email.toLowerCase() === email.toLowerCase()) {
+const getUserByEmail = (email, database) => {
+  for (let key in database) {
+    if (database[key].email.toLowerCase() === email.toLowerCase()) {
       return key;
     }
   }
 };
 
+// function to filter the user in the database
+// based on the user_ID
 const urlsForUser = (id, db) => {
-
   let filteredDB = {}
 
   for (let key in db) {
@@ -25,4 +26,4 @@ const urlsForUser = (id, db) => {
 }
 
 
-module.exports = { generateRandomString, checkEmail, urlsForUser }
+module.exports = { generateRandomString, getUserByEmail, urlsForUser }
