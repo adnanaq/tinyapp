@@ -154,7 +154,8 @@ app.get('/register', (req, res) => {
   const templateVars = {
     user: users[req.session['user_id']]
   };
-  res.render('registration_page', templateVars);
+
+  req.session['user_id'] ? res.redirect('/urls') : res.render('registration_page', templateVars);
 });
 
 // Verfification of login infor before signing-in.
@@ -204,8 +205,7 @@ app.post('/register', (req, res) => {
   }
 });
 
-// route to logout
-//GET /logout
+//  Clearing the cookies and logout
 app.get('/logout', (req, res) => {
   // clearing the cookie by logging-out
   console.log(req.session['user_id']);
