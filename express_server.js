@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
   req.session['user_id'] ? res.redirect('/urls') : res.redirect('/login');
 });
 
-// route to the list of short and long URL list
+// Lst of short and long URL list
 app.get('/urls', (req, res) => {
 
   const urlDatabaseFiltered = urlsForUser(req.session['user_id'], urlDatabase);
@@ -45,7 +45,7 @@ app.get('/urls', (req, res) => {
 });
 
 
-// route to new URL search query
+// New URL search query
 app.get('/urls/new', (req, res) => {
   const templateVars = {
     user: users[req.session['user_id']]
@@ -54,7 +54,7 @@ app.get('/urls/new', (req, res) => {
   req.session['user_id'] ? res.render('urls_new', templateVars) : res.redirect('/login');
 });
 
-// route to use shortURL/IDs to get to the longURL
+// Use shortURL/IDs to get to the longURL
 app.get('/urls/:shortURL', (req, res) => {
 
   const shortURL = req.params.shortURL;
@@ -82,14 +82,14 @@ app.get('/urls/:shortURL', (req, res) => {
   }
 });
 
-// route to redirect to the actual website
+// Redirect to the actual website
 app.get('/u/:shortURL', (req, res) => {
   const longURL = urlDatabase[req.params.shortURL]['longURL'];
   longURL ? res.redirect(longURL) : res.send('The URL does not exist!')
 });
 
 
-// POST route to post/update the new url in the database
+// Post/update the new url in the database
 app.post('/urls', (req, res) => {
 
   const shortURL = generateRandomString();
@@ -109,7 +109,7 @@ app.post('/urls', (req, res) => {
   return res.send('Please sign-in/register to add the URL!')
 });
 
-// route to delete URL using the key
+// Delete URL using the keyi if user logged in
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
   if (req.session['user_id']) {
@@ -140,18 +140,16 @@ app.post('/urls/:shortURL', (req, res) => {
 });
 
 
-// route to login page
-// GET /login
+// login page
 app.get('/login', (req, res) => {
   const templateVars = {
     user: users[req.session['user_id']]
   };
-  res.render('login_form', templateVars);
+
+  req.session['user_id'] ? res.redirect('/urls') : res.render('login_form', templateVars);
 });
 
-// route to registration page
-// READ
-// GET /register
+// Registration page
 app.get('/register', (req, res) => {
   const templateVars = {
     user: users[req.session['user_id']]
@@ -159,10 +157,8 @@ app.get('/register', (req, res) => {
   res.render('registration_page', templateVars);
 });
 
-// route to feed infromation to login page
-// POST /login
+// Verfification of login infor before signing-in.
 app.post('/login', (req, res) => {
-  // storing the provided username in tthe cookies
 
   const email = req.body.email;
   const password = req.body.password;
