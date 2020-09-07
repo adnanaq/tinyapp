@@ -112,21 +112,31 @@ app.post('/urls', (req, res) => {
 // route to delete URL using the key
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL]['userID'] === req.session['user_id']) {
-    delete urlDatabase[shortURL];
+  if (req.session['user_id']) {
+    if (urlDatabase[shortURL]['userID'] === req.session['user_id']) {
+      delete urlDatabase[shortURL];
+      return res.redirect('/urls')
+    } else {
+      return res.send('Cannot Delete, Do not own the URL!')
+    }
   }
   res.send('Unauthorized/Unregistered user cannot delete the link');
 });
 
-// route to edit the existing longURLs
+// Edit the existing longURLs
 app.post('/urls/:shortURL', (req, res) => {
   const longURL = req.body.longURL;
   const shortURL = req.params.shortURL;
 
-  if (urlDatabase[shortURL]['userID'] === req.session['user_id']) {
-    urlDatabase[shortURL]['longURL'] = longURL;
+  if (req.session['user_id']) {
+    if (urlDatabase[shortURL]['userID'] === req.session['user_id']) {
+      urlDatabase[shortURL]['longURL'] = longURL;
+      return res.redirect('/urls');
+    } else {
+      return res.send('Cannot Edit the URL. Do not own it!')
+    }
   }
-  res.redirect('/urls');
+  res.send('Please login/register to Edit the URL!')
 });
 
 
