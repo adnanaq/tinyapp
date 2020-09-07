@@ -112,6 +112,7 @@ app.post('/urls', (req, res) => {
 // Delete URL using the keyi if user logged in
 app.post('/urls/:shortURL/delete', (req, res) => {
   const shortURL = req.params.shortURL;
+
   if (req.session['user_id']) {
     if (urlDatabase[shortURL]['userID'] === req.session['user_id']) {
       delete urlDatabase[shortURL];
